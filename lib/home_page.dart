@@ -1,5 +1,7 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:nesro_mart/constants.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -17,53 +19,405 @@ class _HomePageState extends State<HomePage> {
     'https://images.unsplash.com/photo-1508704019882-f9cf40e475b4?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=8c6e5e3aba713b17aa1fe71ab4f0ae5b&auto=format&fit=crop&w=1352&q=80',
     'https://images.unsplash.com/photo-1519985176271-adb1088fa94c?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=a0c8d632e977f94e5d312d9893258f59&auto=format&fit=crop&w=1355&q=80'
   ];
+
+  final List<String> _categories = [
+    "ALL",
+    "ELECTRONICS",
+    "BEVERAGE",
+    "SKIN CARE"
+  ];
+  int _selectedIndex = 0;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: Column(children: [
-      CarouselSlider(
-        options: CarouselOptions(
-          autoPlay: true,
-          aspectRatio: 2.0,
+        appBar: AppBar(
+          automaticallyImplyLeading: false,
+          elevation: 0,
+          backgroundColor: Colors.transparent,
+          title: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                "Nesro Mart",
+                style: TextStyle(
+                    fontWeight: FontWeight.w900,
+                    fontSize: 24,
+                    color: kPrimaryColor),
+              ),
+              Row(
+                children: [
+                  IconButton(
+                    onPressed: () {},
+                    icon: const Icon(
+                      Icons.favorite_border_rounded,
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 12.0),
+                    child: IconButton(
+                      onPressed: () {},
+                      icon: const Icon(
+                        CupertinoIcons.cart,
+                      ),
+                    ),
+                  ),
+                  IconButton(
+                    onPressed: () {},
+                    icon: const Icon(
+                      CupertinoIcons.bell,
+                    ),
+                  )
+                ],
+              )
+            ],
+          ),
         ),
-        items: imgList
-            .map((item) => SizedBox(
-                  // height: 45,
-                  child: Container(
-                    margin: const EdgeInsets.all(5.0),
-                    child: ClipRRect(
-                        borderRadius:
-                            const BorderRadius.all(Radius.circular(5.0)),
-                        child: Stack(
-                          children: <Widget>[
-                            Image.asset(
-                              "assets/banner (1).png",
-                              fit: BoxFit.cover,
-                              width: 1000.0,
-                            ),
-                            Positioned(
-                              bottom: 0.0,
-                              left: 0.0,
-                              right: 0.0,
-                              child: Container(
-                                decoration: const BoxDecoration(
-                                  gradient: LinearGradient(
-                                    colors: [
-                                      Color.fromARGB(200, 0, 0, 0),
-                                      Color.fromARGB(0, 0, 0, 0)
-                                    ],
-                                    begin: Alignment.bottomCenter,
-                                    end: Alignment.topCenter,
+        body: SingleChildScrollView(
+          child: Column(children: [
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 18.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  SizedBox(
+                    height: 48,
+                    width: MediaQuery.sizeOf(context).width * 0.75,
+                    child: const TextField(
+                      decoration: InputDecoration(
+                          hintText: "Search items",
+                          border: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                width: 1,
+                              ),
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(14)))),
+                    ),
+                  ),
+                  Container(
+                    height: 48,
+                    width: 48,
+                    decoration: BoxDecoration(
+                        color: kPrimaryColor,
+                        borderRadius: BorderRadius.circular(10)),
+                    child: const Icon(
+                      Icons.search_rounded,
+                      color: Colors.white,
+                    ),
+                  )
+                ],
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(left: 24.0, top: 16, bottom: 16),
+              child: CarouselSlider(
+                options: CarouselOptions(
+                  height: 95,
+                  autoPlay: true,
+                  aspectRatio: 2.0,
+                ),
+                items: imgList
+                    .map((item) => SizedBox(
+                          child: Container(
+                            margin: const EdgeInsets.all(5.0),
+                            child: ClipRRect(
+                                borderRadius: const BorderRadius.all(
+                                    Radius.circular(5.0)),
+                                child: Stack(
+                                  children: <Widget>[
+                                    Image.asset(
+                                      "assets/banner (1).png",
+                                      fit: BoxFit.cover,
+                                      width: 1000.0,
+                                    ),
+                                  ],
+                                )),
+                          ),
+                        ))
+                    .toList(),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 10.0),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  const Padding(
+                    padding: EdgeInsets.only(left: 10.0),
+                    child: Align(
+                      alignment: Alignment.topLeft,
+                      child: Text(
+                        "Shop by Category",
+                        style: TextStyle(
+                            fontSize: 20, fontWeight: FontWeight.w400),
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 16.0),
+                    child: SizedBox(
+                      height: 40.0,
+                      child: ListView.builder(
+                        scrollDirection: Axis.horizontal,
+                        physics: const BouncingScrollPhysics(),
+                        itemCount: _categories.length,
+                        itemBuilder: (BuildContext context, int index) {
+                          return GestureDetector(
+                            onTap: () {
+                              setState(() {
+                                _selectedIndex = index;
+                              });
+                            },
+                            child: Container(
+                              margin:
+                                  const EdgeInsets.symmetric(horizontal: 10.0),
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 10.0, vertical: 5.0),
+                              decoration: BoxDecoration(
+                                color: _selectedIndex == index
+                                    ? kPrimaryColor
+                                    : const Color(0xffF6F6F6),
+                                borderRadius: BorderRadius.circular(10.0),
+                              ),
+                              child: Center(
+                                child: Text(
+                                  _categories[index],
+                                  style: TextStyle(
+                                    fontSize: 18,
+                                    color: _selectedIndex == index
+                                        ? Theme.of(context)
+                                            .colorScheme
+                                            .background
+                                        : const Color(0xffA5A5A5),
+                                    fontWeight: FontWeight.w700,
                                   ),
                                 ),
                               ),
                             ),
-                          ],
-                        )),
+                          );
+                        },
+                      ),
+                    ),
                   ),
-                ))
-            .toList(),
-      ),
-    ]));
+                ],
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 18.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  const Padding(
+                    padding: EdgeInsets.only(bottom: 8),
+                    child: Align(
+                      alignment: Alignment.topLeft,
+                      child: Text(
+                        'Frequently Purchased Items',
+                        textAlign: TextAlign.left,
+                        style: TextStyle(
+                            fontSize: 20, fontWeight: FontWeight.w600),
+                      ),
+                    ),
+                  ),
+                  SizedBox(
+                    height: 250,
+                    child: ListView.builder(
+                      scrollDirection: Axis.horizontal,
+                      itemBuilder: (context, index) {
+                        return Row(
+                          children: [
+                            SizedBox(
+                              child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceAround,
+                                  children: [
+                                    ClipRRect(
+                                        borderRadius: BorderRadius.circular(10),
+                                        child: Image.asset(
+                                          "assets/men-s-fashion-off-white-sneakers.png",
+                                          fit: BoxFit.contain,
+                                        )),
+                                    const Text(
+                                      "Nido Milk Powder",
+                                      style: TextStyle(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w700),
+                                    ),
+                                    const Text(
+                                      "Food",
+                                      style: TextStyle(
+                                          fontSize: 13,
+                                          fontWeight: FontWeight.w500),
+                                    ),
+                                    Text(
+                                      "ETB 1450.00",
+                                      style: TextStyle(
+                                          fontSize: 15,
+                                          fontWeight: FontWeight.w700,
+                                          color: kPrimaryColor),
+                                    )
+                                  ]),
+                            ),
+                            const SizedBox(
+                              width: 18,
+                            )
+                          ],
+                        );
+                      },
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(
+              height: 20,
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 18.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Padding(
+                    padding: EdgeInsets.only(bottom: 8),
+                    child: Align(
+                      alignment: Alignment.topLeft,
+                      child: Text(
+                        'Packages',
+                        textAlign: TextAlign.left,
+                        style: TextStyle(
+                            fontSize: 20, fontWeight: FontWeight.w600),
+                      ),
+                    ),
+                  ),
+                  SizedBox(
+                    height: 250,
+                    child: ListView.builder(
+                      scrollDirection: Axis.horizontal,
+                      itemBuilder: (context, index) {
+                        return Row(
+                          children: [
+                            SizedBox(
+                              child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceAround,
+                                  children: [
+                                    ClipRRect(
+                                        borderRadius: BorderRadius.circular(10),
+                                        child: Image.asset(
+                                          "assets/portrait-fit-woman-running-outdoor 1.png",
+                                          fit: BoxFit.contain,
+                                        )),
+                                    const Text(
+                                      "Asbeza Package",
+                                      style: TextStyle(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w700),
+                                    ),
+                                    const Text(
+                                      "Food",
+                                      style: TextStyle(
+                                          fontSize: 13,
+                                          fontWeight: FontWeight.w500),
+                                    ),
+                                    Text(
+                                      "ETB 5400.00",
+                                      style: TextStyle(
+                                          fontSize: 15,
+                                          fontWeight: FontWeight.w700,
+                                          color: kPrimaryColor),
+                                    )
+                                  ]),
+                            ),
+                            const SizedBox(
+                              width: 18,
+                            )
+                          ],
+                        );
+                      },
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(
+              height: 20,
+            ),
+            Padding(
+              padding: const EdgeInsets.only(left: 12.0),
+              child: Column(
+                children: [
+                  const Padding(
+                    padding: EdgeInsets.only(bottom: 8),
+                    child: Align(
+                      alignment: Alignment.topLeft,
+                      child: Text(
+                        'For you',
+                        textAlign: TextAlign.left,
+                        style: TextStyle(
+                            fontSize: 20, fontWeight: FontWeight.w600),
+                      ),
+                    ),
+                  ),
+                  GridView.builder(
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    gridDelegate:
+                        const SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 2,
+                      mainAxisExtent: 250,
+                      crossAxisSpacing: 4.0,
+                      mainAxisSpacing: 28.0,
+                      childAspectRatio: 0.9,
+                    ),
+                    itemCount: 8,
+                    itemBuilder: (context, index) {
+                      return Row(
+                        children: [
+                          SizedBox(
+                            child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceAround,
+                                children: [
+                                  ClipRRect(
+                                      borderRadius: BorderRadius.circular(10),
+                                      child: Image.asset(
+                                        "assets/portrait-fit-woman-running-outdoor 1 (1).png",
+                                        fit: BoxFit.contain,
+                                      )),
+                                  const Text(
+                                    "Electric Stove",
+                                    style: TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w700),
+                                  ),
+                                  const Text(
+                                    "Home materials",
+                                    style: TextStyle(
+                                        fontSize: 13,
+                                        fontWeight: FontWeight.w500),
+                                  ),
+                                  Text(
+                                    "ETB 7200.00",
+                                    style: TextStyle(
+                                        fontSize: 15,
+                                        fontWeight: FontWeight.w700,
+                                        color: kPrimaryColor),
+                                  )
+                                ]),
+                          ),
+                        ],
+                      );
+                    },
+                  ),
+                ],
+              ),
+            )
+          ]),
+        ));
   }
 }

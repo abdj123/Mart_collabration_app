@@ -84,7 +84,7 @@ class _LogInPageState extends State<LogInPage> {
                           GestureDetector(
                             onTap: () {
                               Navigator.of(context).push(MaterialPageRoute(
-                                builder: (context) => VerificationPage(),
+                                builder: (context) => const VerificationPage(),
                               ));
                             },
                             child: Container(
